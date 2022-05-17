@@ -1,0 +1,7 @@
+#DEFINE helloWorld "Hello, world"
+
+%entry
+	mov a helloWorld
+	mov b len(helloWorld)
+	syscall 0
+	halt
