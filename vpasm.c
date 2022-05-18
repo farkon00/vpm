@@ -46,7 +46,7 @@ void vpasm_exec_program(Memory* memory)
     exit(1);
   } else {
     printf("Program Instruction Count: %zu\n", program->program_size);
-    while (program->ip < program->program_size) {
+    while (program->ip < program->program_size && !program->halt) {
       printf("%zu\n", program->ip);
       vpasm_exec_inst(memory, program->instructions[++program->ip], true);
     }
