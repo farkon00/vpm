@@ -46,7 +46,8 @@ int main(int argc, char **argv)
       // TODO: Load programs from .vpasm files.
       Memory memory = {0};
       vpasm_initialize_registers(&memory);
-      vpasm_exec_inst(&memory, "mov", true);
+      vpasm_exec_inst(&memory, (Instruction){.type = INSTRUCTION_MOV, .char_operand="eax", .int_operand=5}, true);
+      vpasm_exec_inst(&memory, (Instruction){.type = INSTRUCTION_MOV, .char_operand="ebx", .int_operand=3}, true);
       vpasm_debug_print_registers(stdout, &memory);
       vpasm_free_registers(&memory);
       //}

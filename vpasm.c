@@ -27,15 +27,28 @@ void vpasm_debug_print_registers(FILE *stream, Memory* memory)
 }
 
 
-void vpasm_exec_inst(Memory* memory, char* instruction, bool trace)
+void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
 {
-  (void) instruction;
 
-  if (strcmp("mov", instruction) == 0) {
-    // Hard coded for testing
-    // mov eax 2
-    if (trace) printf("Executing:\n\tMOV EAX 2\n");
-    *memory->eax = 2;
+  (void) memory;
+  (void) instruction;
+  (void) trace;
+
+  switch (instruction.type) {
+  case INSTRUCTION_MOV:
+    if (strcmp("eax", instruction.char_operand) == 0) {
+
+      *memory->eax = instruction.int_operand;
+      
+    } else if (strcmp("ebx", instruction.char_operand) == 0) {
+
+      *memory->ebx = instruction.int_operand;
+      
+    } else {
+      fprintf(stderr, "[ERROR] Invalid argument for instruction MOV.");
+    }
+    break;
+  default: break;
   }
   
 }
