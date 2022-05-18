@@ -3,7 +3,7 @@
 #include<string.h>
 #include<assert.h>
 
-// #include "./vpasm.h"
+#include "./vpasm.h"
 
 char *shift(int *argc, char ***argv)
 {
@@ -38,11 +38,24 @@ int main(int argc, char **argv)
       usage(program_name);
       exit(1);
     } else if (strcmp(flag, "-v") == 0) {
-      if (argc <= 0) {
-	usage(program_name);
-	fprintf(stderr, "[ERROR] No input file was provided.\n");
-	exit(1);
-      }
+      //      if (argc <= 0) {
+      //	usage(program_name);
+      //	fprintf(stderr, "[ERROR] No input file was provided.\n");
+      //	exit(1);
+      // For now, we will run a predefined program
+      // TODO: Load programs from .vpasm files.
+      Memory memory = {0};
+      vpasm_initialize_memory(&memory);
+      vpasm_exec_inst(&memory, "push", false);
+      vpasm_exec_inst(&memory, "push", false);
+      vpasm_exec_inst(&memory, "push", false);
+      vpasm_exec_inst(&memory, "push", false);
+      vpasm_debug_print_memory(stdout, &memory);
+      vpasm_free_memory(&memory);
+      //}
+    
+    //char* input_file = shift(&argc, &argv);
+    // (void) input_file;
     } else {
       usage(program_name);
       fprintf(stderr, "[ERROR] Unknown flag %s\n", flag);
