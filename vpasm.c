@@ -7,34 +7,35 @@
 
 #define MEM_CAPACITY 1024
 
-void vpasm_initialize_memory(Memory* memory)
+void vpasm_initialize_registers(Memory* memory)
 {
-  memory->memory = malloc(MEM_CAPACITY * sizeof(int)); 
+  memory->eax = malloc(sizeof(int));
+  memory->ebx = malloc(sizeof(int));
 }
 
-void vpasm_free_memory(Memory* memory)
+void vpasm_free_registers(Memory* memory)
 {
-  free(memory->memory);
+  free(memory->eax);
+  free(memory->ebx);
 }
 
-void vpasm_debug_print_memory(FILE *stream, Memory* memory)
+void vpasm_debug_print_registers(FILE *stream, Memory* memory)
 {
-  fprintf(stream, "[DEBUG] vpasm_debug_print_memory:\n");
-  for (size_t i = 1; i <= memory->memory_size; ++i) {
-    fprintf(stream, "    Position %zu: %d\n", i, *(memory->memory + (i)));
-  }
+  fprintf(stream, "[DEBUG] vpasm_debug_print_registers:\n");
+  fprintf(stream, "\tEAX: %d\n", *memory->eax);
+  fprintf(stream, "\tEBX: %d\n", *memory->ebx);
 }
+
 
 void vpasm_exec_inst(Memory* memory, char* instruction, bool trace)
 {
-  if (strcmp("push", instruction) == 0) {
-    if (trace) printf("PUSHING 60:\n");
-    assert(memory->memory_size < MEM_CAPACITY);
-    memory->memory[++memory->memory_size] = 60;
-    if (trace) printf("    Current mem size: %zu. Position %zu has value %d\n", memory->memory_size, memory->memory_size, memory->memory[memory->memory_size]);
-  } else {
-    fprintf(stderr, "vpasm_exec_inst: UNREACHABLE");
-    exit(1);
-  }
+  (void) instruction;
 
+  if (strcmp("mov", instruction) == 0) {
+    // Hard coded for testing
+    // mov eax 2
+    if (trace) printf("Executing:\n\tMOV EAX 2\n");
+    *memory->eax = 2;
+  }
+  
 }

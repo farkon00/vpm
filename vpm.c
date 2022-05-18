@@ -45,13 +45,10 @@ int main(int argc, char **argv)
       // For now, we will run a predefined program
       // TODO: Load programs from .vpasm files.
       Memory memory = {0};
-      vpasm_initialize_memory(&memory);
-      vpasm_exec_inst(&memory, "push", false);
-      vpasm_exec_inst(&memory, "push", false);
-      vpasm_exec_inst(&memory, "push", false);
-      vpasm_exec_inst(&memory, "push", false);
-      vpasm_debug_print_memory(stdout, &memory);
-      vpasm_free_memory(&memory);
+      vpasm_initialize_registers(&memory);
+      vpasm_exec_inst(&memory, "mov", true);
+      vpasm_debug_print_registers(stdout, &memory);
+      vpasm_free_registers(&memory);
       //}
     
     //char* input_file = shift(&argc, &argv);

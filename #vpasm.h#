@@ -7,6 +7,7 @@ typedef struct {
   size_t memory_size;
   int* eax;
   int* ebx;
+  int*
 } Memory;
 
 void vpasm_initialize_registers(Memory* memory);
