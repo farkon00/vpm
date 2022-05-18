@@ -1,7 +1,11 @@
 #DEFINE helloWorld "Hello, world"
+#DEFINE write 0
+#DEFINE stdout 0
 
 %entry
-	mov a helloWorld
-	mov b len(helloWorld)
-	syscall 0
+	mov eax helloWorld
+	mov ebx len(helloWorld)
+	mov edx stdout
+	syscall write
+	mov eax 0
 	halt

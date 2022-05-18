@@ -45,9 +45,9 @@ void vpasm_exec_program(Memory* memory)
     fprintf(stderr, "[ERROR] vpasm_exec_program: MEMORY HAS NO PROGRAM LOADED.\n");
     exit(1);
   } else {
-    printf("Program Instruction Count: %zu\n", memory->program->program_size);
+    printf("Program Instruction Count: %zu\n", program->program_size);
     for (size_t i = 1; i <= program->program_size; ++i) {
-      printf("To Move: %d\n", program->instructions[i].int_operand);
+      vpasm_exec_inst(memory, program->instructions[i], true);
     }
   }
 }
