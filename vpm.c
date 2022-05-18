@@ -43,6 +43,7 @@ int main(int argc, char **argv)
 
       vpasm_add_instruction(&program, (Instruction) {.type=INSTRUCTION_MOV, .int_operand=5, .char_operand="ebx"});
       vpasm_add_instruction(&program, (Instruction) {.type=INSTRUCTION_MOV, .int_operand=7, .char_operand="eax"});
+      vpasm_add_instruction(&program, (Instruction) {.type=INSTRUCTION_HALT});
       
       vpasm_initialize_registers(&memory);
       

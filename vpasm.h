@@ -5,6 +5,7 @@
 
 typedef enum {
   INSTRUCTION_MOV,
+  INSTRUCTION_HALT,
 } Instruction_Type;
 
 typedef struct {
@@ -15,6 +16,7 @@ typedef struct {
 
 typedef struct {
   size_t ip;
+  size_t halt;
   size_t program_size;
   Instruction* instructions;
 } Program;

@@ -34,20 +34,21 @@ void vpasm_free(Memory* memory)
 
 void vpasm_load_program(Memory* memory, Program* program) {
   /* TODO */
-  memory->program = malloc(sizeof(program));
+  memory->program = malloc(sizeof(program) * PROGRAM_CAPACITY);
   *memory->program = *program;
 }
 
 void vpasm_exec_program(Memory* memory)
 {
-  const Program* program = memory->program;
+  Program* program = memory->program;
   if (program == 0) {
     fprintf(stderr, "[ERROR] vpasm_exec_program: MEMORY HAS NO PROGRAM LOADED.\n");
     exit(1);
   } else {
     printf("Program Instruction Count: %zu\n", program->program_size);
-    for (size_t i = 1; i <= program->program_size; ++i) {
-      vpasm_exec_inst(memory, program->instructions[i], true);
+    while (program->ip < program->program_size) {
+      printf("%zu\n", program->ip);
+      vpasm_exec_inst(memory, program->instructions[++program->ip], true);
     }
   }
 }
@@ -62,11 +63,7 @@ void vpasm_debug_print_registers(FILE *stream, Memory* memory)
 
 void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
 {
-
-  (void) memory;
-  (void) instruction;
   (void) trace;
-
   switch (instruction.type) {
   case INSTRUCTION_MOV:
     if (strcmp("eax", instruction.char_operand) == 0) {
@@ -80,6 +77,9 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
     } else {
       fprintf(stderr, "[ERROR] Invalid argument for instruction MOV.");
     }
+    break;
+  case INSTRUCTION_HALT:
+    memory->program->halt = 1;
     break;
   default: break;
   }
