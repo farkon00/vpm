@@ -5,7 +5,18 @@
 
 #include "vpasm.h"
 
-#define MEM_CAPACITY 1024
+#define PROGRAM_CAPACITY 1024
+
+void vpasm_add_instruction(Program* program, Instruction instruction)
+{
+  (void) instruction;
+  
+  if (program->instructions == 0) {
+    program->instructions = malloc(PROGRAM_CAPACITY * sizeof(Instruction));
+  }
+  
+  program->instructions[++program->program_size] = instruction;
+}
 
 void vpasm_initialize_registers(Memory* memory)
 {
@@ -17,6 +28,26 @@ void vpasm_free_registers(Memory* memory)
 {
   free(memory->eax);
   free(memory->ebx);
+}
+
+void vpasm_load_program(Memory* memory, Program* program) {
+  /* TODO */
+  memory->program = malloc(sizeof(program));
+  *memory->program = *program;
+}
+
+void vpasm_exec_program(Memory* memory)
+{
+  const Program* program = memory->program;
+  if (program == 0) {
+    fprintf(stderr, "[ERROR] vpasm_exec_program: MEMORY HAS NO PROGRAM LOADED.\n");
+    exit(1);
+  } else {
+    printf("Program Instruction Count: %zu\n", memory->program->program_size);
+    for (size_t i = 1; i <= program->program_size; ++i) {
+      printf("To Move: %d\n", program->instructions[i].int_operand);
+    }
+  }
 }
 
 void vpasm_debug_print_registers(FILE *stream, Memory* memory)

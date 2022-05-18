@@ -38,22 +38,20 @@ int main(int argc, char **argv)
       usage(program_name);
       exit(1);
     } else if (strcmp(flag, "-v") == 0) {
-      //      if (argc <= 0) {
-      //	usage(program_name);
-      //	fprintf(stderr, "[ERROR] No input file was provided.\n");
-      //	exit(1);
-      // For now, we will run a predefined program
-      // TODO: Load programs from .vpasm files.
       Memory memory = {0};
+      Program program = {0};
+
+      vpasm_add_instruction(&program, (Instruction) {.type=INSTRUCTION_MOV, .int_operand=5, .char_operand="ebx"});
+      vpasm_add_instruction(&program, (Instruction) {.type=INSTRUCTION_MOV, .int_operand=7, .char_operand="eax"});
+      
       vpasm_initialize_registers(&memory);
-      vpasm_exec_inst(&memory, (Instruction){.type = INSTRUCTION_MOV, .char_operand="eax", .int_operand=5}, true);
-      vpasm_exec_inst(&memory, (Instruction){.type = INSTRUCTION_MOV, .char_operand="ebx", .int_operand=3}, true);
+      
+      vpasm_load_program(&memory, &program);
+      vpasm_exec_program(&memory);
+      
       vpasm_debug_print_registers(stdout, &memory);
       vpasm_free_registers(&memory);
-      //}
-    
-    //char* input_file = shift(&argc, &argv);
-    // (void) input_file;
+
     } else {
       usage(program_name);
       fprintf(stderr, "[ERROR] Unknown flag %s\n", flag);

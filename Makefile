@@ -1,5 +1,5 @@
 COMPILER=gcc
-CFLAGS=-Wall -Wextra -std=c11 -pedantic -ggdb
+CFLAGS=-Wall -Werror -Wextra -std=c11 -pedantic -ggdb
 
 SRC=$(wildcard *.c)
 

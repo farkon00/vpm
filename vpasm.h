@@ -3,12 +3,6 @@
 #ifndef VPASM_H_
 #define VPASM_H_
 
-typedef struct {
-  size_t memory_size;
-  int* eax;
-  int* ebx;
-} Memory;
-
 typedef enum {
   INSTRUCTION_MOV,
 } Instruction_Type;
@@ -19,8 +13,27 @@ typedef struct {
   int int_operand; 
 } Instruction;
 
+typedef struct {
+  size_t ip;
+  size_t program_size;
+  Instruction* instructions;
+} Program;
+
+typedef struct {
+  size_t memory_size;
+  Program* program;
+  int* eax;
+  int* ebx;
+} Memory;
+
+
+void vpasm_add_instruction(Program* program, Instruction instruction);
+
 void vpasm_initialize_registers(Memory* memory);
 void vpasm_free_registers(Memory* memory);
+
+void vpasm_load_program(Memory* memory, Program* program);
+void vpasm_exec_program(Memory* memory);
 
 void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace);
 
