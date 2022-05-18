@@ -24,10 +24,12 @@ void vpasm_initialize_registers(Memory* memory)
   memory->ebx = malloc(sizeof(int));
 }
 
-void vpasm_free_registers(Memory* memory)
+void vpasm_free(Memory* memory)
 {
   free(memory->eax);
   free(memory->ebx);
+  free(memory->program->instructions);
+  free(memory->program);
 }
 
 void vpasm_load_program(Memory* memory, Program* program) {

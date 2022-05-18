@@ -50,7 +50,7 @@ int main(int argc, char **argv)
       vpasm_exec_program(&memory);
       
       vpasm_debug_print_registers(stdout, &memory);
-      vpasm_free_registers(&memory);
+      vpasm_free(&memory);
 
     } else {
       usage(program_name);

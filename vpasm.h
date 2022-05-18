@@ -30,7 +30,7 @@ typedef struct {
 void vpasm_add_instruction(Program* program, Instruction instruction);
 
 void vpasm_initialize_registers(Memory* memory);
-void vpasm_free_registers(Memory* memory);
+void vpasm_free(Memory* memory);
 
 void vpasm_load_program(Memory* memory, Program* program);
 void vpasm_exec_program(Memory* memory);
