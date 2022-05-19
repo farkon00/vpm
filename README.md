@@ -12,7 +12,3 @@ This project was inspired by [Tsoding's BM](https://github.com/tsoding/bm/).
 $ make
 $ ./vpm -v
 ```
-
-## Documentation
-
-You can find the documentation [here](./DOCUMENTATION.md).

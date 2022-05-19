@@ -28,7 +28,7 @@ int main(int argc, char **argv)
 {
   char* program_name = shift(&argc, &argv);
 
-  printf("%s\n", sv_to_cstr(cstr_to_sv("[TEST] cstr_to_sv && sv_to_cstr are functioning correctly!")));
+  printf("%s\n", sv_to_cstr(sv_trim_whitespace(cstr_to_sv("   [TEST] String_Views functioning correctly!    "))));
   
   if (argc == 0) {
     usage(program_name);
