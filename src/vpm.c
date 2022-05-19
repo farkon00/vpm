@@ -5,7 +5,7 @@
 
 #include "./vpasm.h"
 
-#define INST_MOV(reg, value) (Instruction){.type = INSTRUCTION_MOV, .char_operand=reg, .int_operand=value}
+#define INST_MOV(reg, value) (Instruction){.type = INSTRUCTION_MOV, .arguments= (char*[]){reg, value}, .arg_count=2}
 #define INST_HALT (Instruction){.type = INSTRUCTION_HALT}
 
 char *shift(int *argc, char ***argv)
@@ -56,10 +56,10 @@ int main(int argc, char **argv)
     Memory memory = {0};
     Program program = {0};
 
-    vpasm_add_instruction(&program, INST_MOV("ebx", 5));
-    vpasm_add_instruction(&program, INST_MOV("eax", 7));
+    vpasm_add_instruction(&program, INST_MOV("ebx", "5"));
+    vpasm_add_instruction(&program, INST_MOV("eax", "ebx"));
     vpasm_add_instruction(&program, INST_HALT);
-    vpasm_add_instruction(&program, INST_MOV("ebx", 8));
+    vpasm_add_instruction(&program, INST_MOV("ebx", "8"));
       
     vpasm_initialize_registers(&memory);
       

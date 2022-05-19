@@ -12,8 +12,8 @@ typedef enum {
 
 typedef struct {
   Instruction_Type type;
-  char* char_operand;
-  int int_operand; 
+  char** arguments;
+  size_t arg_count;
 } Instruction;
 
 typedef struct {
@@ -26,10 +26,11 @@ typedef struct {
 typedef struct {
   size_t memory_size;
   Program* program;
-  int* eax;
-  int* ebx;
+  int* registers;
 } Memory;
 
+
+char* vpasm_reg_index_to_name(size_t register_index);
 
 void vpasm_add_instruction(Program* program, Instruction instruction);
 
