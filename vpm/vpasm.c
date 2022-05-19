@@ -81,7 +81,7 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
   case INSTRUCTION_HALT:
     memory->program->halt = 1;
     break;
-  default: assert(False);
+  default: assert(0 && "Unimplemented Instruction");
   }
   
 }

@@ -34,10 +34,10 @@ int main(int argc, char **argv)
     exit(1);
   }
   
+  size_t exec = 0;
   while (argc > 0) {
     const char* flag = shift(&argc, &argv);
-    int exec = 0;
-
+    
     if (strcmp(flag, "-h") == 0 || strcmp(flag, "--help") == 0) {
       usage(program_name);
       exit(0);
@@ -66,7 +66,9 @@ int main(int argc, char **argv)
       
     vpasm_debug_print_registers(stdout, &memory);
     vpasm_free(&memory);
-  } else { assert(False); }
+  } else {
+    assert(0 && "Unreachable Code - vpm.c");
+  }
   
   return 0;
 }
