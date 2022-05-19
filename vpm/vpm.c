@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
     if (strcmp(flag, "-h") == 0) {
       usage(program_name);
-      exit(1);
+      exit(0);
     } else if (strcmp(flag, "-v") == 0) {
       exec = 1;
     } else {
