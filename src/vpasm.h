@@ -11,6 +11,9 @@ typedef enum {
   INSTRUCTION_SUM,
   INSTRUCTION_SUB,
   INSTRUCTION_JMP,
+  INSTRUCTION_DEBUG_PRINT,
+  INSTRUCTION_MULT,
+  INSTRUCTION_DIV
 } Instruction_Type;
 
 typedef struct {
@@ -41,7 +44,7 @@ void vpasm_initialize_registers(Memory* memory);
 void vpasm_free(Memory* memory);
 
 void vpasm_load_program(Memory* memory, Program* program);
-void vpasm_exec_program(Memory* memory);
+void vpasm_exec_program(Memory* memory, size_t limit, bool trace);
 
 void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace);
 

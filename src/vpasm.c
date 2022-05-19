@@ -8,7 +8,6 @@
 
 #define PROGRAM_CAPACITY 1024
 #define REGISTERS 4
-#define MAX_EXECUTIONS 69
 
 void vpasm_add_instruction(Program* program, Instruction instruction)
 {
@@ -68,7 +67,7 @@ void vpasm_load_program(Memory* memory, Program* program) {
   *memory->program = *program;
 }
 
-void vpasm_exec_program(Memory* memory)
+void vpasm_exec_program(Memory* memory, size_t limit, bool trace)
 {
   Program* program = memory->program;
   if (program == 0) {
@@ -78,9 +77,9 @@ void vpasm_exec_program(Memory* memory)
     printf("Program Instruction Count: %zu\n", program->program_size);
     program->ip = 1;
     size_t current_exec = 0;
-    while (program->ip < program->program_size && !program->halt && current_exec < MAX_EXECUTIONS) {
+    while (program->ip < program->program_size && !program->halt && current_exec < limit) {
       ++current_exec;
-      vpasm_exec_inst(memory, program->instructions[program->ip], true);
+      vpasm_exec_inst(memory, program->instructions[program->ip], trace);
     }
   }
 }
@@ -143,6 +142,43 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
     }
     ++memory->program->ip;
     break;
+  case INSTRUCTION_MULT:
+    {
+      if (instruction.arg_count != 2) {
+	fprintf(stderr, "[ERROR] MULT requires 2 arguments.");
+	exit(1);
+      }
+
+      if (trace) printf("[TRACE] MULT %s %s\n", instruction.arguments[0], instruction.arguments[1]);
+
+      size_t regOne = vpasm_reg_name_to_index(instruction.arguments[0]);
+      size_t regTwo = vpasm_reg_name_to_index(instruction.arguments[1]);
+
+      memory->registers[regOne] = memory->registers[regOne] * memory->registers[regTwo];
+    }
+    ++memory->program->ip;
+    break;
+  case INSTRUCTION_DIV:
+    {
+      if (instruction.arg_count != 2) {
+	fprintf(stderr, "[ERROR] DIV requires 2 arguments.");
+	exit(1);
+      }
+
+      if (trace) printf("[TRACE] DIV %s %s\n", instruction.arguments[0], instruction.arguments[1]);
+
+      size_t regOne = vpasm_reg_name_to_index(instruction.arguments[0]);
+      size_t regTwo = vpasm_reg_name_to_index(instruction.arguments[1]);
+
+      if (memory->registers[regTwo] == 0) {
+	fprintf(stderr, "[ERROR] Cannot divide by 0.");
+	exit(1);
+      }
+
+      memory->registers[regOne] = memory->registers[regOne] / memory->registers[regTwo];
+    }
+    ++memory->program->ip;
+    break;
   case INSTRUCTION_SUB:
     {
     if (instruction.arg_count != 2) {
@@ -177,6 +213,19 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
       memory->program->ip = atoi(instruction.arguments[0]);
       break;
     }
+  case INSTRUCTION_DEBUG_PRINT:
+    {
+    if (instruction.arg_count != 1) {
+      fprintf(stderr, "[ERROR] DEBUG_PRINT requires 1 argument.");
+      exit(1);
+    }
+
+    size_t reg = vpasm_reg_name_to_index(instruction.arguments[0]);
+    
+    printf("[DEBUG_PRINT] %s: %d\n", instruction.arguments[0], memory->registers[reg]);
+    }
+    ++memory->program->ip;
+    break;
   default: assert(0 && "Unimplemented Instruction");
   }
   
