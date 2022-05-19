@@ -23,6 +23,7 @@ String_View sv_trim_whitespace(String_View sv)
 {
   return sv_trim_whitespace_left(sv_trim_whitespace_right(sv));
 }
+
 String_View sv_trim_whitespace_left(String_View sv)
 {
   size_t i = 0;
@@ -48,5 +49,28 @@ String_View sv_trim_whitespace_right(String_View sv)
     .count = sv.count - i,
     .contents = sv.contents
   };
+}
+
+String_View sv_chop_by_delimiter(String_View *sv, char delimiter)
+{
+  size_t i = 0;
+  while (i < sv->count && sv->contents[i] != delimiter) {
+    i += 1;
+  }
+
+  String_View res = {
+    .count = i,
+    .contents = sv->contents,
+  };
+
+  if (i < sv->count) {
+    sv->count -= i + 1;
+    sv->contents += i + 1;
+  } else {
+    sv->count -= i;
+    sv->contents += i;
+  }
+
+  return res;
 }
 
