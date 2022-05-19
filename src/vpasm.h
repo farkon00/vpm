@@ -8,6 +8,8 @@
 typedef enum {
   INSTRUCTION_MOV,
   INSTRUCTION_HALT,
+  INSTRUCTION_SUM,
+  INSTRUCTION_SUB,
 } Instruction_Type;
 
 typedef struct {

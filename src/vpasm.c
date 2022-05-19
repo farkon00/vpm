@@ -123,6 +123,38 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
     if (trace) printf("[TRACE] HALT\n");
     memory->program->halt = 1;
     break;
+  case INSTRUCTION_SUM:
+    {
+    if (instruction.arg_count != 2) {
+      fprintf(stderr, "[ERROR] SUM requires 2 arguments.");
+      exit(1);
+    }
+
+    if (trace) printf("[TRACE] SUM %s %s\n", instruction.arguments[0], instruction.arguments[1]);
+
+    size_t regOne = vpasm_reg_name_to_index(instruction.arguments[0]);
+    size_t regTwo = vpasm_reg_name_to_index(instruction.arguments[1]);
+
+    memory->registers[regOne] = memory->registers[regOne] + memory->registers[regTwo];
+    }
+    break;
+  case INSTRUCTION_SUB:
+    {
+    if (instruction.arg_count != 2) {
+      fprintf(stderr, "[ERROR] SUB requires 2 arguments.");
+      exit(1);
+    }
+
+    if (trace) printf("[TRACE] SUB %s %s\n", instruction.arguments[0], instruction.arguments[1]);
+
+    size_t regOne = vpasm_reg_name_to_index(instruction.arguments[0]);
+    size_t regTwo = vpasm_reg_name_to_index(instruction.arguments[1]);
+
+    memory->registers[regOne] = memory->registers[regOne] - memory->registers[regTwo];
+
+    }
+    break;
+
   default: assert(0 && "Unimplemented Instruction");
   }
   
