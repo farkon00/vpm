@@ -11,6 +11,7 @@
 #define INST_MULT(regOne, regTwo) (Instruction) {.type = INSTRUCTION_MULT, .arguments = (char*[]){regOne, regTwo}, .arg_count = 2}
 #define INST_DIV(regOne, regTwo) (Instruction) {.type = INSTRUCTION_DIV, .arguments = (char*[]){regOne, regTwo}, .arg_count = 2}
 #define INST_JMP(jmpLoc) (Instruction) {.type = INSTRUCTION_JMP, .arguments = (char*[]){jmpLoc}, .arg_count = 1}
+#define INST_JMP_IF_ZERO(jmpLoc) (Instruction) {.type = INSTRUCTION_JMP_IF_ZERO, .arguments = (char*[]){jmpLoc}, .arg_count = 1}
 #define INST_DEBUG_PRINT(reg) (Instruction) {.type = INSTRUCTION_DEBUG_PRINT, .arguments = (char*[]){reg}, .arg_count = 1}
 #define INST_HALT (Instruction){.type = INSTRUCTION_HALT}
 
@@ -33,8 +34,6 @@ void usage(char *program_name)
 int main(int argc, char **argv)
 {
   char* program_name = shift(&argc, &argv);
-
-  printf("%s\n", sv_to_cstr(sv_trim_whitespace(cstr_to_sv("   [TEST] String_Views functioning correctly!    "))));
   
   if (argc == 0) {
     usage(program_name);
@@ -62,21 +61,26 @@ int main(int argc, char **argv)
     Memory memory = {0};
     Program program = {0};
 
-    vpasm_add_instruction(&program, INST_MOV("eax", "0"));
-    vpasm_add_instruction(&program, INST_MOV("ebx", "1"));
-    vpasm_add_instruction(&program, INST_DEBUG_PRINT("eax"));
+    vpasm_add_instruction(&program, INST_MOV("eax", "10"));
+    vpasm_add_instruction(&program, INST_MOV("ebx", "0"));
+    vpasm_add_instruction(&program, INST_MOV("ecx", "1"));
     vpasm_add_instruction(&program, INST_DEBUG_PRINT("ebx"));
-    vpasm_add_instruction(&program, INST_SUM("eax", "ebx"));
-    vpasm_add_instruction(&program, INST_SUM("ebx", "eax"));
-    vpasm_add_instruction(&program, INST_DEBUG_PRINT("eax"));
+    vpasm_add_instruction(&program, INST_DEBUG_PRINT("ecx"));
+    vpasm_add_instruction(&program, INST_MOV("edx", "2"));
+    vpasm_add_instruction(&program, INST_SUB("eax", "edx"));
+    vpasm_add_instruction(&program, INST_SUM("ebx", "ecx"));
+    vpasm_add_instruction(&program, INST_SUM("ecx", "ebx"));
     vpasm_add_instruction(&program, INST_DEBUG_PRINT("ebx"));
-    vpasm_add_instruction(&program, INST_JMP("5"));
+    vpasm_add_instruction(&program, INST_DEBUG_PRINT("ecx"));
+    vpasm_add_instruction(&program, INST_SUB("eax", "edx"));
+    vpasm_add_instruction(&program, INST_JMP_IF_ZERO("16"));
+    vpasm_add_instruction(&program, INST_JMP("8"));
     vpasm_add_instruction(&program, INST_HALT);
       
     vpasm_initialize_registers(&memory);
       
     vpasm_load_program(&memory, &program);
-    vpasm_exec_program(&memory, 69, false);
+    vpasm_exec_program(&memory, 100, false);
       
     vpasm_debug_print_registers(stdout, &memory);
     vpasm_free(&memory);

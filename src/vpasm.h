@@ -6,14 +6,15 @@
 #define VPASM_H_
 
 typedef enum {
-  INSTRUCTION_MOV,
-  INSTRUCTION_HALT,
-  INSTRUCTION_SUM,
-  INSTRUCTION_SUB,
-  INSTRUCTION_JMP,
-  INSTRUCTION_DEBUG_PRINT,
-  INSTRUCTION_MULT,
-  INSTRUCTION_DIV
+  INSTRUCTION_MOV, // MOV <register 1> <register 2 / value> - Moves the value of register 2 or an immediate value into register 1
+  INSTRUCTION_HALT, // HALT - Halts the program
+  INSTRUCTION_SUM, // SUM <register 1> <register 2> - Sums the value of the two registers and stores it in register 1
+  INSTRUCTION_SUB, // SUB <register 1> <register 2> - Subtracts the value of register 2 from register 1 and stores it in register 1
+  INSTRUCTION_JMP, // JMP <instruction> - Jumps to a specific instruction
+  INSTRUCTION_DEBUG_PRINT, // DEBUG_PRINT <register> - Prints a register's value for debug purposes
+  INSTRUCTION_MULT, // MULT <register 1> <register 2> - Multiplies the value of the two registers and stores it in register 1
+  INSTRUCTION_DIV, // DIV <register 1> <register 2> - Divides the value of register 1 by register 2 and stores it in register 1, so long as register 2 is not 0
+  INSTRUCTION_JMP_IF_ZERO // JMP_IF_ZERO <instruction> - Jumps to a specific instruction so long as `eax` is 0
 } Instruction_Type;
 
 typedef struct {

@@ -213,6 +213,27 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
       memory->program->ip = atoi(instruction.arguments[0]);
       break;
     }
+  case INSTRUCTION_JMP_IF_ZERO:
+    {
+      if (instruction.arg_count != 1) {
+	fprintf(stderr, "[ERROR] JMP_IF_ZERO requires 1 argument.");
+	exit(1);
+      }
+      
+      if (!isdigit(*instruction.arguments[0])) {
+	fprintf(stderr, "[ERROR] %s is not a valid jump location.", instruction.arguments[0]);
+	exit(1);
+      }
+      
+      if (trace) printf("[TRACE] JMP_IF_ZERO %s\n", instruction.arguments[0]);
+
+      if (memory->registers[vpasm_reg_name_to_index("eax")] == 0) {
+	memory->program->ip = atoi(instruction.arguments[0]);
+      } else {
+	++memory->program->ip;
+      }
+      break;
+    }
   case INSTRUCTION_DEBUG_PRINT:
     {
     if (instruction.arg_count != 1) {
