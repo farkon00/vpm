@@ -22,7 +22,7 @@ typedef enum {
 
 typedef struct {
   Instruction_Type type;
-  char** arguments;
+  char arguments[2][4];
   size_t arg_count;
 } Instruction;
 
