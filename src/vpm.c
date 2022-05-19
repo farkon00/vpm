@@ -58,6 +58,8 @@ int main(int argc, char **argv)
 
     vpasm_add_instruction(&program, INST_MOV("ebx", "5"));
     vpasm_add_instruction(&program, INST_MOV("eax", "ebx"));
+    vpasm_add_instruction(&program, INST_MOV("edx", "89"));
+    vpasm_add_instruction(&program, INST_MOV("ebx", "edx"));
     vpasm_add_instruction(&program, INST_HALT);
     vpasm_add_instruction(&program, INST_MOV("ebx", "8"));
       

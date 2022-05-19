@@ -7,7 +7,7 @@
 #include "vpasm.h"
 
 #define PROGRAM_CAPACITY 1024
-#define REGISTERS 2
+#define REGISTERS 4
 
 void vpasm_add_instruction(Program* program, Instruction instruction)
 {
@@ -38,6 +38,10 @@ char* vpasm_reg_index_to_text(size_t register_index) {
     return "eax";
   case 1:
     return "ebx";
+  case 2:
+    return "ecx";
+  case 3:
+    return "edx";
   default:
     assert(0 && "Invalid register location");
   }
@@ -47,6 +51,10 @@ size_t vpasm_reg_name_to_index(char* name) {
     return 0;
   } else if (strcmp(name, "ebx") == 0) {
     return 1;
+  } else if (strcmp(name, "ecx") == 0) {
+    return 2;
+  } else if (strcmp(name, "edx") == 0) {
+    return 3;
   } else {
     fprintf(stderr, "[ERROR] Invalid Register Name: %s\n", name);
     exit(1);
