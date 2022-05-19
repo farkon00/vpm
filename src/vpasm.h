@@ -5,6 +5,9 @@
 #ifndef VPASM_H_
 #define VPASM_H_
 
+
+#define PROGRAM_CAPACITY 1024
+
 typedef enum {
   INSTRUCTION_MOV, // MOV <register 1> <register 2 / value> - Moves the value of register 2 or an immediate value into register 1
   INSTRUCTION_HALT, // HALT - Halts the program

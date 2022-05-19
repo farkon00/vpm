@@ -1,5 +1,5 @@
 COMPILER=gcc
-CFLAGS=-Wall -Wswitch -Werror -Wextra -std=c11 -pedantic -ggdb
+CFLAGS=-Wall -Wswitch -Werror -Wextra -fsanitize=address -std=c11 -pedantic -ggdb
 
 SRC=$(wildcard src/*.c)
 

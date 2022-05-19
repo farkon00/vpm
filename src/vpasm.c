@@ -6,7 +6,7 @@
 
 #include "vpasm.h"
 
-#define PROGRAM_CAPACITY 1024
+
 #define REGISTERS 4
 
 void vpasm_add_instruction(Program* program, Instruction instruction)
