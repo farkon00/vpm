@@ -1,7 +1,7 @@
-#include<stdio.h>
-#include<string.h>
-#include<stdlib.h>
-#include<assert.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
 
 #include "vpasm.h"
 
@@ -81,7 +81,7 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
   case INSTRUCTION_HALT:
     memory->program->halt = 1;
     break;
-  default: break;
+  default: assert(False);
   }
   
 }

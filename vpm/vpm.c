@@ -1,7 +1,7 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<assert.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <assert.h>
 
 #include "./vpasm.h"
 
@@ -36,33 +36,37 @@ int main(int argc, char **argv)
   
   while (argc > 0) {
     const char* flag = shift(&argc, &argv);
+    int exec = 0;
 
-    if (strcmp(flag, "-h") == 0) {
+    if (strcmp(flag, "-h") == 0 || strcmp(flag, "--help") == 0) {
       usage(program_name);
-      exit(1);
+      exit(0);
     } else if (strcmp(flag, "-v") == 0) {
-      Memory memory = {0};
-      Program program = {0};
-
-      vpasm_add_instruction(&program, INST_MOV("ebx", 5));
-      vpasm_add_instruction(&program, INST_MOV("eax", 7));
-      vpasm_add_instruction(&program, INST_HALT);
-      vpasm_add_instruction(&program, INST_MOV("ebx", 8));
-      
-      vpasm_initialize_registers(&memory);
-      
-      vpasm_load_program(&memory, &program);
-      vpasm_exec_program(&memory);
-      
-      vpasm_debug_print_registers(stdout, &memory);
-      vpasm_free(&memory);
-
+      exec = 1;
     } else {
       usage(program_name);
       fprintf(stderr, "[ERROR] Unknown flag %s\n", flag);
       exit(1);
     }
   }
+
+  if (exec) {
+    Memory memory = {0};
+    Program program = {0};
+
+    vpasm_add_instruction(&program, INST_MOV("ebx", 5));
+    vpasm_add_instruction(&program, INST_MOV("eax", 7));
+    vpasm_add_instruction(&program, INST_HALT);
+    vpasm_add_instruction(&program, INST_MOV("ebx", 8));
+      
+    vpasm_initialize_registers(&memory);
+      
+    vpasm_load_program(&memory, &program);
+    vpasm_exec_program(&memory);
+      
+    vpasm_debug_print_registers(stdout, &memory);
+    vpasm_free(&memory);
+  } else { assert(False); }
   
   return 0;
 }
