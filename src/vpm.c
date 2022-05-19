@@ -8,6 +8,7 @@
 #define INST_MOV(reg, value) (Instruction) {.type = INSTRUCTION_MOV, .arguments = (char*[]){reg, value}, .arg_count = 2}
 #define INST_SUM(regOne, regTwo) (Instruction) {.type = INSTRUCTION_SUM, .arguments = (char*[]){regOne, regTwo}, .arg_count = 2}
 #define INST_SUB(regOne, regTwo) (Instruction) {.type = INSTRUCTION_SUB, .arguments = (char*[]){regOne, regTwo}, .arg_count = 2}
+#define INST_JMP(jmpLoc) (Instruction) {.type = INSTRUCTION_JMP, .arguments = (char*[]){jmpLoc}, .arg_count = 1}
 #define INST_HALT (Instruction){.type = INSTRUCTION_HALT}
 
 char *shift(int *argc, char ***argv)
@@ -58,21 +59,10 @@ int main(int argc, char **argv)
     Memory memory = {0};
     Program program = {0};
 
-    // MOV eax 5
-    // MOV ebx 10
-    // SUM eax ebx (adds 10 to 5, leaving 15 in eax)
-    // MOV ebx 15
-    // SUB eax ebx (subtracts 15 from 15, zeroing eax)
-
-    // EXPECTED:
-    // rax: 0
-    // rbx: 15
-
     vpasm_add_instruction(&program, INST_MOV("eax", "5"));
-    vpasm_add_instruction(&program, INST_MOV("ebx", "10"));
+    vpasm_add_instruction(&program, INST_MOV("ebx", "4"));
     vpasm_add_instruction(&program, INST_SUM("eax", "ebx"));
-    vpasm_add_instruction(&program, INST_MOV("ebx", "15"));
-    vpasm_add_instruction(&program, INST_SUB("eax", "ebx"));
+    vpasm_add_instruction(&program, INST_JMP("2"));
     vpasm_add_instruction(&program, INST_HALT);
       
     vpasm_initialize_registers(&memory);

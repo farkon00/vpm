@@ -10,6 +10,7 @@ typedef enum {
   INSTRUCTION_HALT,
   INSTRUCTION_SUM,
   INSTRUCTION_SUB,
+  INSTRUCTION_JMP,
 } Instruction_Type;
 
 typedef struct {

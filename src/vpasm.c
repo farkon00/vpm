@@ -8,6 +8,7 @@
 
 #define PROGRAM_CAPACITY 1024
 #define REGISTERS 4
+#define MAX_EXECUTIONS 69
 
 void vpasm_add_instruction(Program* program, Instruction instruction)
 {
@@ -75,8 +76,11 @@ void vpasm_exec_program(Memory* memory)
     exit(1);
   } else {
     printf("Program Instruction Count: %zu\n", program->program_size);
-    while (program->ip < program->program_size && !program->halt) {
-      vpasm_exec_inst(memory, program->instructions[++program->ip], true);
+    program->ip = 1;
+    size_t current_exec = 0;
+    while (program->ip < program->program_size && !program->halt && current_exec < MAX_EXECUTIONS) {
+      ++current_exec;
+      vpasm_exec_inst(memory, program->instructions[program->ip], true);
     }
   }
 }
@@ -117,7 +121,7 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
     } else {
       memory->registers[reg] = atoi(instruction.arguments[1]);
     }
-    
+    ++memory->program->ip;
     break;
   case INSTRUCTION_HALT:
     if (trace) printf("[TRACE] HALT\n");
@@ -137,6 +141,7 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
 
     memory->registers[regOne] = memory->registers[regOne] + memory->registers[regTwo];
     }
+    ++memory->program->ip;
     break;
   case INSTRUCTION_SUB:
     {
@@ -153,8 +158,25 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
     memory->registers[regOne] = memory->registers[regOne] - memory->registers[regTwo];
 
     }
+    ++memory->program->ip;
     break;
+  case INSTRUCTION_JMP:
+    {
+      if (instruction.arg_count != 1) {
+	fprintf(stderr, "[ERROR] JMP requires 1 argument.");
+	exit(1);
+      }
+      
+      if (!isdigit(*instruction.arguments[0])) {
+	fprintf(stderr, "[ERROR] %s is not a valid jump location.", instruction.arguments[0]);
+	exit(1);
+      }
 
+      if (trace) printf("[TRACE] JMP %s\n", instruction.arguments[0]);
+      
+      memory->program->ip = atoi(instruction.arguments[0]);
+      break;
+    }
   default: assert(0 && "Unimplemented Instruction");
   }
   
