@@ -1,5 +1,7 @@
 #include<stdbool.h>
 
+#include "stringview.h"
+
 #ifndef VPASM_H_
 #define VPASM_H_
 
