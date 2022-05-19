@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     const char* flag = shift(&argc, &argv);
     int exec = 0;
 
-    if (strcmp(flag, "-h") == 0) {
+    if (strcmp(flag, "-h") == 0 || strcmp(flag, "--help") == 0) {
       usage(program_name);
       exit(0);
     } else if (strcmp(flag, "-v") == 0) {
