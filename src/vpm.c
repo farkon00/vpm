@@ -28,6 +28,8 @@ int main(int argc, char **argv)
 {
   char* program_name = shift(&argc, &argv);
 
+  printf("%s\n", sv_to_cstr(cstr_to_sv("[TEST] cstr_to_sv && sv_to_cstr are functioning correctly!")));
+  
   if (argc == 0) {
     usage(program_name);
     fprintf(stderr, "[ERROR] No arguments were provided.\n");

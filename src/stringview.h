@@ -9,6 +9,7 @@ typedef struct {
 	char* contents;
 } String_View;
 
-String_View cstr_to_sv(const char* cstr);
+String_View cstr_to_sv(char* cstr);
+char *sv_to_cstr(String_View sv);
 
 #endif //STRINGVIEW_H_
