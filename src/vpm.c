@@ -143,11 +143,22 @@ int main(int argc, char **argv)
         exit(1);
       }
 
-      const char* input_file = shift(&argc, &argv);
-      (void) input_file;
-      printf("-v is currently unimplemented.\n");
-      exit(1);
+      char* input_file = shift(&argc, &argv);
+      char* output_file = "output.vpm";
+      if (argc == 0) {
+        // No output path provided
+        String_View extension = cstr_to_sv(input_file);
+        String_View input_name = sv_chop_by_delimiter(&extension, '.');
 
+        output_file = strcat(sv_to_cstr(input_name), ".vpm");
+      }
+
+      Program program = {0};
+
+      assert(0 && "TODO: Implement load from .vpasm file");
+      // vpasm_load_from_file(&program, input_file);
+
+      program_as_bin_file(&program, output_file);
     } else if (strcmp(flag, "-e") == 0) {
       if (argc < 1) {
         usage(program_name);

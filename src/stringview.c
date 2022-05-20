@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 
@@ -7,15 +8,16 @@
 String_View cstr_to_sv(char* cstr)
 {
   return (String_View) {
-    .count = strlen(cstr),
+    .count = strlen(cstr) + 1,
     .contents = cstr
   };
 }
 
 char *sv_to_cstr(String_View sv)
 {
-  char *result = malloc(sv.count);
+  char *result = malloc(sv.count + 1);
   memcpy(result, sv.contents, sv.count);
+  *(result + sv.count) = '\0';
   return result;
 }
 
@@ -73,4 +75,3 @@ String_View sv_chop_by_delimiter(String_View *sv, char delimiter)
 
   return res;
 }
-
