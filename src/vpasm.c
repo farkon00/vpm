@@ -12,11 +12,11 @@
 void vpasm_add_instruction(Program* program, Instruction instruction)
 {
   (void) instruction;
-  
+
   if (program->instructions == 0) {
     program->instructions = malloc(PROGRAM_CAPACITY * sizeof(Instruction));
   }
-  
+
   program->instructions[++program->program_size] = instruction;
 }
 
@@ -104,13 +104,13 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
     }
 
     if (trace) printf("[TRACE] MOV %s %s\n", instruction.arguments[0], instruction.arguments[1]);
-    
+
     if (isdigit(*instruction.arguments[0])) {
 	/* Invalid for first instruction */
 	fprintf(stderr, "[ERROR] Cannot move to a value.");
 	exit(1);
     }
-      
+
     size_t reg = vpasm_reg_name_to_index(instruction.arguments[0]);
 
     if (!isdigit(*instruction.arguments[1])) {
@@ -202,14 +202,14 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
 	fprintf(stderr, "[ERROR] JMP requires 1 argument.");
 	exit(1);
       }
-      
+
       if (!isdigit(*instruction.arguments[0])) {
 	fprintf(stderr, "[ERROR] %s is not a valid jump location.", instruction.arguments[0]);
 	exit(1);
       }
 
       if (trace) printf("[TRACE] JMP %s\n", instruction.arguments[0]);
-      
+
       memory->program->ip = atoi(instruction.arguments[0]);
       break;
     }
@@ -219,12 +219,12 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
 	fprintf(stderr, "[ERROR] JMP_IF_ZERO requires 1 argument.");
 	exit(1);
       }
-      
+
       if (!isdigit(*instruction.arguments[0])) {
 	fprintf(stderr, "[ERROR] %s is not a valid jump location.", instruction.arguments[0]);
 	exit(1);
       }
-      
+
       if (trace) printf("[TRACE] JMP_IF_ZERO %s\n", instruction.arguments[0]);
 
       if (memory->registers[vpasm_reg_name_to_index("eax")] == 0) {
@@ -242,12 +242,12 @@ void vpasm_exec_inst(Memory* memory, Instruction instruction, bool trace)
     }
 
     size_t reg = vpasm_reg_name_to_index(instruction.arguments[0]);
-    
+
     printf("[DEBUG_PRINT] %s: %d\n", instruction.arguments[0], memory->registers[reg]);
     }
     ++memory->program->ip;
     break;
   default: assert(0 && "Unimplemented Instruction");
   }
-  
+
 }

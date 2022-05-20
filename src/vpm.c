@@ -83,8 +83,9 @@ char *shift(int *argc, char ***argv)
 void usage(char *program_name)
 {
   fprintf(stderr, "[USAGE] %s <flags> [arguments]\n", program_name);
-  fprintf(stderr, "-v <input_file>          Compile and run a vpasm file.\n");
-  fprintf(stderr, "-h                       Display this help message.\n");
+  fprintf(stderr, "-v <input.vpasm> [-o output.vpm]   Compile vpasm file to a .vpm binary file.\n");
+  fprintf(stderr, "-e <program.vpm>                   Execute a .vpm file\n");
+  fprintf(stderr, "-h                                 Display this help message.\n");
 }
 
 void program_as_bin_file(Program* program, char* output_file)
@@ -117,8 +118,6 @@ void program_from_bin_file(Program* program, char* file_path)
 
   program->program_size = fread(program->instructions, sizeof(Instruction), fsize / sizeof(Instruction), f);
 
-  // TODO: Arguments aren't being read properly and it's causing SEGFAULT
-
   fclose(f);
 }
 
@@ -132,7 +131,6 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  size_t exec = 0;
   while (argc > 0) {
     const char* flag = shift(&argc, &argv);
 
@@ -140,47 +138,42 @@ int main(int argc, char **argv)
       usage(program_name);
       exit(0);
     } else if (strcmp(flag, "-v") == 0) {
-      exec = 1;
+      if (argc < 1) {
+        usage(program_name);
+        exit(1);
+      }
+
+      const char* input_file = shift(&argc, &argv);
+      (void) input_file;
+      printf("-v is currently unimplemented.\n");
+      exit(1);
+
+    } else if (strcmp(flag, "-e") == 0) {
+      if (argc < 1) {
+        usage(program_name);
+        exit(1);
+      }
+
+      char* input_file = shift(&argc, &argv);
+      printf("%s\n", input_file);
+      Memory memory = {0};
+      Program program = {0};
+
+      vpasm_initialize_registers(&memory);
+
+      program_from_bin_file(&program, input_file);
+
+      vpasm_load_program(&memory, &program);
+      vpasm_exec_program(&memory, 100, false);
+
+      vpasm_debug_print_registers(stdout, &memory);
+      vpasm_free(&memory);
+      exit(0);
     } else {
       usage(program_name);
       fprintf(stderr, "[ERROR] Unknown flag %s\n", flag);
       exit(1);
     }
-  }
-
-  if (exec) {
-    Memory memory = {0};
-    Program program = {0};
-
-    program_from_bin_file(&program, "output.vpm");
-
-    // vpasm_add_instruction(&program, INST_MOV("eax", "10"));
-    // vpasm_add_instruction(&program, INST_MOV("ebx", "0"));
-    // vpasm_add_instruction(&program, INST_MOV("ecx", "1"));
-    // vpasm_add_instruction(&program, INST_DEBUG_PRINT("ebx"));
-    // vpasm_add_instruction(&program, INST_DEBUG_PRINT("ecx"));
-    // vpasm_add_instruction(&program, INST_MOV("edx", "2"));
-    // vpasm_add_instruction(&program, INST_SUB("eax", "edx"));
-    // vpasm_add_instruction(&program, INST_SUM("ebx", "ecx"));
-    // vpasm_add_instruction(&program, INST_SUM("ecx", "ebx"));
-    // vpasm_add_instruction(&program, INST_DEBUG_PRINT("ebx"));
-    // vpasm_add_instruction(&program, INST_DEBUG_PRINT("ecx"));
-    // vpasm_add_instruction(&program, INST_SUB("eax", "edx"));
-    // vpasm_add_instruction(&program, INST_JMP_IF_ZERO("16"));
-    // vpasm_add_instruction(&program, INST_JMP("8"));
-    // vpasm_add_instruction(&program, INST_HALT());
-
-    vpasm_initialize_registers(&memory);
-
-    vpasm_load_program(&memory, &program);
-    vpasm_exec_program(&memory, 100, false);
-
-    // program_as_bin_file(&program, "output.vpm");
-
-    vpasm_debug_print_registers(stdout, &memory);
-    vpasm_free(&memory);
-  } else {
-    assert(0 && "Unreachable Code - vpm.c");
   }
 
   return 0;
