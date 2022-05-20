@@ -151,6 +151,19 @@ int main(int argc, char **argv)
         String_View input_name = sv_chop_by_delimiter(&extension, '.');
 
         output_file = strcat(sv_to_cstr(input_name), ".vpm");
+      } else {
+        char *flag = shift(&argc, &argv);
+        if (strcmp(flag, "-o") != 0) {
+          usage(program_name);
+          fprintf(stderr, "Unknown flag: %s\n", flag);
+          exit(1);
+        }
+        if (argc == 0) {
+          usage(program_name);
+          fprintf(stderr, "No output file name provided for flag -o\n");
+          exit(1);
+        }
+        output_file = shift(&argc, &argv);
       }
 
       Program program = {0};
