@@ -10,5 +10,6 @@ This project was inspired by [Tsoding's BM](https://github.com/tsoding/bm/).
 
 ```console
 $ make
-$ ./vpm -v
+$ ./vpm -v <input.vpasm> -o <output.vpm>
+$ ./vpm -e <output.vpm>
 ```
