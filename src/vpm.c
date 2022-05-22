@@ -111,7 +111,12 @@ void program_from_bin_file(Program* program, char* file_path)
 
   fseek(f, 0, SEEK_END);
   long fsize = ftell(f);
-  assert(fsize % sizeof(program->instructions[0]) == 0);
+  if (fsize % sizeof(program->instructions[0]) != 0) {
+    fprintf(stderr, "[ERROR] File size is not correct for a vpm file.\n");
+    fprintf(stderr, "[NOTE] %s is most likely not a valid vpm file.\n", file_path);
+    exit(1);
+  }  
+  
   fseek(f, 0, SEEK_SET);
 
   program->instructions = malloc(PROGRAM_CAPACITY * sizeof(Instruction));
@@ -160,7 +165,7 @@ int main(int argc, char **argv)
         }
         if (argc == 0) {
           usage(program_name);
-          fprintf(stderr, "No output file name provided for flag -o\n");
+          fprintf(stderr, "[ERROR] No output file name provided for flag -o\n");
           exit(1);
         }
         output_file = shift(&argc, &argv);
