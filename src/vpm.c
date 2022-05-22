@@ -5,72 +5,6 @@
 
 #include "./vpasm.h"
 
-
-Instruction BUILD_INST(Instruction_Type type, size_t arg_count)
-{
-  return (Instruction) {
-    .type = type,
-    .arg_count = arg_count
-  };
-}
-
-Instruction INST_MOV(char* reg, char* value) {
-  Instruction inst = BUILD_INST(INSTRUCTION_MOV, 2);
-  strncpy(inst.arguments[0], reg, 4);
-  strncpy(inst.arguments[1], value, 4);
-  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
-  return inst;
-}
-Instruction INST_SUM(char* regOne, char* regTwo) {
-  Instruction inst = BUILD_INST(INSTRUCTION_SUM, 2);
-  strncpy(inst.arguments[0], regOne, 4);
-  strncpy(inst.arguments[1], regTwo, 4);
-  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
-  return inst;
-}
-Instruction INST_SUB(char* regOne, char* regTwo) {
-  Instruction inst = BUILD_INST(INSTRUCTION_SUB, 2);
-  strncpy(inst.arguments[0], regOne, 4);
-  strncpy(inst.arguments[1], regTwo, 4);
-  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
-  return inst;
-}
-Instruction INST_MULT(char* regOne, char* regTwo) {
-  Instruction inst = BUILD_INST(INSTRUCTION_MULT, 2);
-  strncpy(inst.arguments[0], regOne, 4);
-  strncpy(inst.arguments[1], regTwo, 4);
-  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
-  return inst;
-}
-Instruction INST_DIV(char* regOne, char* regTwo) {
-  Instruction inst = BUILD_INST(INSTRUCTION_DIV, 2);
-  strncpy(inst.arguments[0], regOne, 4);
-  strncpy(inst.arguments[1], regTwo, 4);
-  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
-  return inst;
-}
-Instruction INST_JMP(char* jmpLoc) {
-  Instruction inst = BUILD_INST(INSTRUCTION_JMP, 1);
-  strncpy(inst.arguments[0], jmpLoc, 4);
-  assert(inst.arguments[0][3] == '\0');
-  return inst;
-}
-Instruction INST_JMP_IF_ZERO(char* jmpLoc) {
-  Instruction inst = BUILD_INST(INSTRUCTION_JMP_IF_ZERO, 1);
-  strncpy(inst.arguments[0], jmpLoc, 4);
-  assert(inst.arguments[0][3] == '\0');
-  return inst;
-}
-Instruction INST_DEBUG_PRINT(char* reg) {
-  Instruction inst = BUILD_INST(INSTRUCTION_DEBUG_PRINT, 1);
-  strncpy(inst.arguments[0], reg, 4);
-  assert(inst.arguments[0][3] == '\0');
-  return inst;
-}
-Instruction INST_HALT() {
-  return (Instruction) {.type = INSTRUCTION_HALT};
-}
-
 char *shift(int *argc, char ***argv)
 {
   assert(*argc > 0);
@@ -115,8 +49,8 @@ void program_from_bin_file(Program* program, char* file_path)
     fprintf(stderr, "[ERROR] File size is not correct for a vpm file.\n");
     fprintf(stderr, "[NOTE] %s is most likely not a valid vpm file.\n", file_path);
     exit(1);
-  }  
-  
+  }
+
   fseek(f, 0, SEEK_SET);
 
   program->instructions = malloc(PROGRAM_CAPACITY * sizeof(Instruction));
@@ -173,10 +107,10 @@ int main(int argc, char **argv)
 
       Program program = {0};
 
-      assert(0 && "TODO: Implement load from .vpasm file");
-      // vpasm_load_from_file(&program, input_file);
+      vpasm_load_from_file(&program, input_file);
 
       program_as_bin_file(&program, output_file);
+
     } else if (strcmp(flag, "-e") == 0) {
       if (argc < 1) {
         usage(program_name);

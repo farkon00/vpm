@@ -75,3 +75,8 @@ String_View sv_chop_by_delimiter(String_View *sv, char delimiter)
 
   return res;
 }
+
+size_t sv_cmp_cstr(String_View sv, char* to_compare)
+{
+    return strcmp(sv_to_cstr(sv), to_compare);
+}

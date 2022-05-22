@@ -8,6 +8,75 @@
 
 
 #define REGISTERS 4
+#define MAX_ARGS 2
+#define MAX_ARG_LENGTH 4
+#define cmp(string, other) strcmp(string, other) == 0
+
+Instruction BUILD_INST(Instruction_Type type, size_t arg_count)
+{
+  return (Instruction) {
+    .type = type,
+    .arg_count = arg_count
+  };
+}
+
+Instruction INST_MOV(char* reg, char* value) {
+  Instruction inst = BUILD_INST(INSTRUCTION_MOV, 2);
+  strncpy(inst.arguments[0], reg, 4);
+  strncpy(inst.arguments[1], value, 4);
+  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
+  return inst;
+}
+Instruction INST_SUM(char* regOne, char* regTwo) {
+  Instruction inst = BUILD_INST(INSTRUCTION_SUM, 2);
+  strncpy(inst.arguments[0], regOne, 4);
+  strncpy(inst.arguments[1], regTwo, 4);
+  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
+  return inst;
+}
+Instruction INST_SUB(char* regOne, char* regTwo) {
+  Instruction inst = BUILD_INST(INSTRUCTION_SUB, 2);
+  strncpy(inst.arguments[0], regOne, 4);
+  strncpy(inst.arguments[1], regTwo, 4);
+  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
+  return inst;
+}
+Instruction INST_MULT(char* regOne, char* regTwo) {
+  Instruction inst = BUILD_INST(INSTRUCTION_MULT, 2);
+  strncpy(inst.arguments[0], regOne, 4);
+  strncpy(inst.arguments[1], regTwo, 4);
+  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
+  return inst;
+}
+Instruction INST_DIV(char* regOne, char* regTwo) {
+  Instruction inst = BUILD_INST(INSTRUCTION_DIV, 2);
+  strncpy(inst.arguments[0], regOne, 4);
+  strncpy(inst.arguments[1], regTwo, 4);
+  assert(inst.arguments[0][3] == '\0' && inst.arguments[1][3] == '\0');
+  return inst;
+}
+Instruction INST_JMP(char* jmpLoc) {
+  Instruction inst = BUILD_INST(INSTRUCTION_JMP, 1);
+  strncpy(inst.arguments[0], jmpLoc, 4);
+  assert(inst.arguments[0][3] == '\0');
+  return inst;
+}
+Instruction INST_JMP_IF_ZERO(char* jmpLoc) {
+  Instruction inst = BUILD_INST(INSTRUCTION_JMP_IF_ZERO, 1);
+  strncpy(inst.arguments[0], jmpLoc, 4);
+  assert(inst.arguments[0][3] == '\0');
+  return inst;
+}
+Instruction INST_DEBUG_PRINT(char* reg) {
+  Instruction inst = BUILD_INST(INSTRUCTION_DEBUG_PRINT, 1);
+  strncpy(inst.arguments[0], reg, 4);
+  assert(inst.arguments[0][3] == '\0');
+  return inst;
+}
+Instruction INST_HALT() {
+  return (Instruction) {.type = INSTRUCTION_HALT};
+}
+
 
 void vpasm_add_instruction(Program* program, Instruction instruction)
 {
@@ -61,8 +130,134 @@ size_t vpasm_reg_name_to_index(char* name) {
   }
 }
 
+void check_arg_amount(String_View instruction, String_View **arguments, size_t amount)
+{
+    for (size_t i = 0; i < amount; ++i) {
+        if ((*arguments)[i].count <= 0) {
+            fprintf(stderr, "[ERROR] Incorrect amount of arguments for instruction %s\n", sv_to_cstr(instruction));
+            exit(1);
+        }
+    }
+}
+
+Instruction vpasm_text_to_inst(String_View instruction, String_View **arguments)
+{
+    if (cmp(sv_to_cstr(instruction), "mov")) {
+        check_arg_amount(instruction, arguments, 2);
+        return INST_MOV(sv_to_cstr((*arguments)[0]), sv_to_cstr((*arguments)[1]));
+    } else if (cmp(sv_to_cstr(instruction), "print")) {
+        check_arg_amount(instruction, arguments, 1);
+        return INST_DEBUG_PRINT(sv_to_cstr((*arguments)[0]));
+    } else if (cmp(sv_to_cstr(instruction), "halt")) {
+        return INST_HALT();
+    } else if (cmp(sv_to_cstr(instruction), "sum")) {
+        check_arg_amount(instruction, arguments, 2);
+        return INST_SUM(sv_to_cstr((*arguments)[0]), sv_to_cstr((*arguments)[1]));
+    } else if (cmp(sv_to_cstr(instruction), "sub")) {
+        check_arg_amount(instruction, arguments, 2);
+        return INST_SUB(sv_to_cstr((*arguments)[0]), sv_to_cstr((*arguments)[1]));
+    } else if (cmp(sv_to_cstr(instruction), "mult")) {
+        check_arg_amount(instruction, arguments, 2);
+        return INST_MULT(sv_to_cstr((*arguments)[0]), sv_to_cstr((*arguments)[1]));
+    } else if (cmp(sv_to_cstr(instruction), "div")) {
+        check_arg_amount(instruction, arguments, 2);
+        return INST_DIV(sv_to_cstr((*arguments)[0]), sv_to_cstr((*arguments)[1]));
+    } else if (cmp(sv_to_cstr(instruction), "jmp")) {
+        check_arg_amount(instruction, arguments, 1);
+        return INST_JMP(sv_to_cstr((*arguments)[0]));
+    } else if (cmp(sv_to_cstr(instruction), "jz")) {
+        check_arg_amount(instruction, arguments, 1);
+        return INST_JMP_IF_ZERO(sv_to_cstr((*arguments)[0]));
+    } else {
+        fprintf(stderr, "[ERROR] Unrecognized instruction: %s\n", sv_to_cstr(instruction));
+    }
+
+    (void) arguments;
+    return (Instruction) {0};
+}
+
+void vpasm_parse_file(Program* program, char* file_contents)
+{
+
+    (void) program;
+
+    String_View program_sv = cstr_to_sv(file_contents);
+
+    size_t entry = 0;
+
+    while (program_sv.count > 0) {
+        String_View line = sv_chop_by_delimiter(&program_sv, '\n');
+
+        if (sv_cmp_cstr(sv_trim_whitespace(line), "%entry:") == 0) {
+            if (entry == 1) {
+                /* Already have an entry point, can't have two. */
+                fprintf(stderr, "[ERROR] Encountered more than one %centry point.\n", 37);
+            }
+            entry = 1;
+        }
+
+        if (entry > 0) {
+            line = sv_trim_whitespace(line);
+            if (sv_cmp_cstr(line, "%entry:") != 0) {
+                size_t argument_count = 0;
+                String_View instruction = sv_chop_by_delimiter(&line, ' ');
+                if (cmp(sv_to_cstr(sv_trim_whitespace(instruction)), "")) {
+                    continue;
+                }
+                String_View* arguments = calloc(MAX_ARGS, sizeof(String_View));
+                if (arguments == NULL) {
+                    fprintf(stderr, "[ERROR] Error allocating memory for arguments of instruction %s\n", sv_to_cstr(instruction));
+                    exit(1);
+                }
+
+                while (line.count > 0) {
+                    assert(++argument_count <= MAX_ARGS && "[ERROR] Too many arguments.");
+
+                    String_View argument = sv_chop_by_delimiter(&line, ' ');
+
+                    assert(argument.count < MAX_ARG_LENGTH && "[ERROR] Argument too long.");
+
+                    arguments[argument_count - 1] = argument;
+                }
+
+                Instruction inst = vpasm_text_to_inst(instruction, &arguments);
+
+                vpasm_add_instruction(program, inst);
+            }
+        }
+    }
+
+    if (entry == 0) {
+        fprintf(stderr, "[ERROR] No %%entry point found!");
+    }
+}
+
+
+void vpasm_load_from_file(Program* program, char* file_path)
+{
+    FILE *f = fopen(file_path, "rb");
+
+    fseek(f, 0, SEEK_END);
+    long fsize = ftell(f);
+    assert (fsize % sizeof(char) == 0);
+
+    fseek(f, 0, SEEK_SET);
+
+    char* file_contents = malloc(fsize + 1);
+
+    fread(file_contents, sizeof(char), fsize / sizeof(char), f);
+
+    fclose(f);
+
+    if (file_contents == NULL) {
+        fprintf(stderr, "[ERROR] Error reading file\n");
+        exit(1);
+    }
+
+    vpasm_parse_file(program, file_contents);
+}
+
 void vpasm_load_program(Memory* memory, Program* program) {
-  /* TODO */
   memory->program = malloc(sizeof(program) * PROGRAM_CAPACITY);
   *memory->program = *program;
 }

@@ -16,5 +16,6 @@ String_View sv_trim_whitespace(String_View sv);
 String_View sv_trim_whitespace_left(String_View sv);
 String_View sv_trim_whitespace_right(String_View sv);
 String_View sv_chop_by_delimiter(String_View *sv, char delimiter);
+size_t sv_cmp_cstr(String_View sv, char* to_compare);
 
 #endif //STRINGVIEW_H_
