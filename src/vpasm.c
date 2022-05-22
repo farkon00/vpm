@@ -80,8 +80,6 @@ Instruction INST_HALT() {
 
 void vpasm_add_instruction(Program* program, Instruction instruction)
 {
-  (void) instruction;
-
   if (program->instructions == 0) {
     program->instructions = malloc(PROGRAM_CAPACITY * sizeof(Instruction));
   }
