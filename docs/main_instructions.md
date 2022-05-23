@@ -3,6 +3,7 @@
 * [mov](#mov)
 * [jmp](#jmp)
 * [jz](#jz)
+* [halt](#halt)
 
 ## mov
   Syntax : `mov <register> <value | register>`
@@ -37,4 +38,15 @@
   ```
   mov eax 1
   jmp 0
+  ```
+
+## halt
+  Syntax : `halt`
+
+  Stops execution, doesnt take sny arguments.
+
+  Examples :
+  ```
+  mov eax 1
+  halt
   ```
