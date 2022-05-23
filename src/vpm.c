@@ -19,7 +19,7 @@ void usage(char *program_name)
   fprintf(stderr, "[USAGE] %s <flags> [arguments]\n", program_name);
   fprintf(stderr, "-v <input.vpasm> [-o output.vpm]   Compile vpasm file to a .vpm binary file.\n");
   fprintf(stderr, "-e <program.vpm>                   Execute a .vpm file\n");
-  fprintf(stderr, "-h                                 Display this help message.\n");
+  fprintf(stderr, "-h --help                          Display this help message.\n");
 }
 
 void program_as_bin_file(Program* program, char* output_file)
