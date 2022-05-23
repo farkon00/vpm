@@ -36,6 +36,14 @@ void program_as_bin_file(Program* program, char* output_file)
   fclose(f);
 }
 
+char* get_output_file(char* input_file)
+{
+  String_View extension = cstr_to_sv(input_file);
+  String_View input_name = sv_chop_by_delimiter(&extension, '.');
+
+  return strcat(sv_to_cstr(input_name), ".vpm");
+}
+
 void program_from_bin_file(Program* program, char* file_path)
 {
   FILE *f = fopen(file_path, "rb");
@@ -61,7 +69,7 @@ void program_from_bin_file(Program* program, char* file_path)
   fclose(f);
 }
 
-int compile_vpasm_to_bin(int argc, char **argv, char *program_name)
+int compile_vpasm_to_bin(int argc, char **argv, char *program_name, bool allow_flags)
 {
   if (argc < 1) {
     usage(program_name);
@@ -71,12 +79,9 @@ int compile_vpasm_to_bin(int argc, char **argv, char *program_name)
   char* input_file = shift(&argc, &argv);
   int shifted = 1;
   char* output_file = "output.vpm";
-  if (argc == 0) {
-    // No output path provided
-    String_View extension = cstr_to_sv(input_file);
-    String_View input_name = sv_chop_by_delimiter(&extension, '.');
-
-    output_file = strcat(sv_to_cstr(input_name), ".vpm");
+  if (argc == 0 || !allow_flags) {
+    // No output path provided or flags are not allowed
+    output_file = get_output_file(input_file); 
   } else {
     char *flag = shift(&argc, &argv);
     shifted++;
@@ -103,14 +108,19 @@ int compile_vpasm_to_bin(int argc, char **argv, char *program_name)
   return shifted;
 }
 
-void execute_bin_file(int argc, char **argv, char *program_name)
+void execute_bin_file(int argc, char **argv, char *program_name, bool use_prog_name)
 {
-  if (argc < 1) {
+  if (argc < 1 && !use_prog_name) {
     usage(program_name);
     exit(1);
   }
 
-  char* input_file = shift(&argc, &argv);
+  char* input_file;
+  if (use_prog_name) {
+    input_file = program_name;
+  } else {
+    input_file = shift(&argc, &argv);
+  }
   printf("%s\n", input_file);
   Memory memory = {0};
   Program program = {0};
@@ -130,6 +140,7 @@ void execute_bin_file(int argc, char **argv, char *program_name)
 int main(int argc, char **argv)
 {
   char* program_name = shift(&argc, &argv);
+  char* output_file = NULL;
 
   if (argc == 0) {
     usage(program_name);
@@ -143,13 +154,17 @@ int main(int argc, char **argv)
     if (strcmp(flag, "-h") == 0 || strcmp(flag, "--help") == 0) {
       usage(program_name);
       exit(0);
+    } else if (strcmp(flag, "-r") == 0) {
+      compile_vpasm_to_bin(argc, argv, program_name, false);
+      output_file = get_output_file(shift(&argc, &argv));
+      execute_bin_file(argc, argv, output_file, true);
     } else if (strcmp(flag, "-v") == 0) {
-      int shifted = compile_vpasm_to_bin(argc, argv, program_name);
+      int shifted = compile_vpasm_to_bin(argc, argv, program_name, true);
       for (int i = 0; i < shifted; i++) {
         shift(&argc, &argv);
       }
     } else if (strcmp(flag, "-e") == 0) {
-      execute_bin_file(argc, argv, program_name);
+      execute_bin_file(argc, argv, program_name, false);
     } else {
       usage(program_name);
       fprintf(stderr, "[ERROR] Unknown flag %s\n", flag);
