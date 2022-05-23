@@ -7,57 +7,56 @@
 * [print](#print)
 
 ## mov
-  Syntax : `mov <register> <value | register>`
+  Syntax: `mov <register> <value | register>`
 
-  Sets value of register in argument 1 to value of
-  register in second argument or value in second
-  register.
+  Sets value of a register to the value of another
+  or an immediate value.
 
-  Examples :
+  Examples:
   ```
   mov eax 1
   mov ebx eax
   ```
-  
+
 ## jmp
-  Syntax : `jmp <ip>`
+  Syntax: `jmp <ip>`
 
-  Unconditionally jumps to insruction with ip `ip`
+  Unconditionally jumps to instruction with ip `ip`
 
-  Examples :
+  Examples:
   ```
   mov eax 1
   jmp 0
   ```
-  
+
 ## jz
-  Syntax : `jz <ip>`
+  Syntax: `jz <ip>`
 
-  Jumps to insruction with ip `ip` if eax is zero.
+  Jumps to instruction with ip `ip` if eax is zero.
 
-  Examples :
+  Examples:
   ```
   mov eax 1
   jmp 0
   ```
 
 ## halt
-  Syntax : `halt`
+  Syntax: `halt`
 
-  Stops execution, doesnt take sny arguments.
+  Simply stops execution of the program.
 
-  Examples :
+  Examples:
   ```
   mov eax 1
   halt
   ```
 
 ## print
-  Syntax : `print <register>`
+  Syntax: `print <register>`
 
-  Used for debug, prints register name and its value.
+  [DEBUG ONLY] Prints register name and its value.
 
-  Examples :
+  Examples:
   ```
   mov eax 1
   print eax
