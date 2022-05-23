@@ -1,0 +1,14 @@
+this code won't be evaluated as it is before the entry point
+
+%entry:
+    mov eax 1
+    mov ebx 2
+    mov ecx 3
+    print eax
+    print ebx
+    print ecx
+    sum eax ebx
+    print eax
+    sum eax ecx
+    print eax
+    halt
