@@ -1,0 +1,18 @@
+# Documentation
+## Main Instructions
+* [mov](#mov)
+* [jmp](#jmp)
+* [jz](#jz)
+
+## mov
+  Syntax : `mov <register> <value | register>`
+
+  Sets value of register in argument 1 to value of
+  register in second argument or value in second
+  register.
+
+  Examples :
+  ```
+  mov eax 1
+  mov ebx eax
+  ``` 
