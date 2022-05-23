@@ -3,7 +3,7 @@
 * [sum](#sum)
 * [mult](#mult)
 * [div](#div)
-* [subt](#sub)
+* [sub](#sub)
 
 ## sum
   Syntax : `sum <register> <register>`
@@ -43,3 +43,15 @@
   div eax ebx
   ```
 
+## sub
+  Syntax : `sub <register> <register>`
+
+  Subtructs value of second register from first one and
+  writes result into first register given.
+
+  Examples :
+  ```
+  mov eax 4
+  mov ebx 2
+  sub eax ebx
+  ```
