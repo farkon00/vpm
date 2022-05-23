@@ -4,6 +4,7 @@
 * [jmp](#jmp)
 * [jz](#jz)
 * [halt](#halt)
+* [print](#print)
 
 ## mov
   Syntax : `mov <register> <value | register>`
@@ -49,4 +50,15 @@
   ```
   mov eax 1
   halt
+  ```
+
+## print
+  Syntax : `print <register>`
+
+  Used for debug, prints register name and its value.
+
+  Examples :
+  ```
+  mov eax 1
+  print eax
   ```
