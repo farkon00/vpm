@@ -11,6 +11,17 @@
   * div
   * sub
 
+## Usage
+USAGE: 
+```
+./vpm <flags> [arguments]
+
+-r <input.vpasm> [-o output.vpm]   Compile vpasm file to a .vpm binary file and execute output file.
+-v <input.vpasm> [-o output.vpm]   Compile vpasm file to a .vpm binary file.
+-e <program.vpm>                   Execute a .vpm file
+-h --help                          Display this help message.
+```
+
 ## Registers
   There are 4 registers:
     eax, ebx, ecx, edx.
